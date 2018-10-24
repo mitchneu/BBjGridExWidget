@@ -58,3 +58,55 @@ export function gw_navigateToNextRow(params) {
       throw new Error("You have super strange keyboard");
   }
 }
+
+export function gw_getRowNodeId(data) {
+  return data[gw_options.__getRowNodeId];
+}
+
+export function gw_getNodeChildDetails(rowItem) {
+
+  const key = rowItem[gw_options.__getParentNodeId];
+  if (rowItem.__node__children) {
+    return {
+      group: true,
+      expanded: false,
+      // provide ag-Grid with the children of this group
+      children: rowItem.__node__children,
+      // the key is used by the default group cellRenderer
+      key: key ? key : -1
+    };
+  } else {
+    return false;
+  }
+}
+
+export function gw_setRowsData(json) {
+  
+  gw_options.api.setRowData(json);
+  gw_options.rowData = json;
+  gw_options.api.refreshClientSideRowModel('group');
+}
+
+export function gw_setRowData(row) {
+
+  console.log(row)
+  gw_options.api.updateRowData({update: [row]});
+  gw_options.api.refreshClientSideRowModel('group');
+}
+
+export function gw_removeRows(indexes) {
+  
+  let items = [];
+  indexes.forEach( index => {
+    items.push(gw_options.api.getRowNode(index).data);
+  });
+
+  gw_options.api.updateRowData({remove: items});
+  gw_options.api.refreshClientSideRowModel('group');
+}
+
+export function gw_addRows(index,rows) {
+  
+  gw_options.api.updateRowData({add: rows, addIndex: index});
+  gw_options.api.refreshClientSideRowModel('group');
+}

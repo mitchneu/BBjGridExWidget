@@ -12,10 +12,10 @@ export function gw_postEvent(ev) {
 
 export function gw_sendEvent(payload) {
 
-  const d = $doc.getElementById('eventTransporterDiv');
+  const div = gw_getDocument().getElementById('eventTransporterDiv');
   const event = new CustomEvent('click');
   event.payload = payload;
-  d.dispatchEvent(event);
+  div.dispatchEvent(event);
 }
 
 export function gw_parseNodeFromEvent(e) {
@@ -23,15 +23,10 @@ export function gw_parseNodeFromEvent(e) {
   if (true === e.node.group) return false; // we do not manage groups
 
   let detail = {
-    id: e.node.id, // auto generated id by ag-gird (can be changed , but we will not change it)
-    childIndex: e.node.childIndex, // row index when it is a child in a group 
-    // childrenCount: e.node.group ? e.node.allChildrenCount : 0,
+    id: !gw_options.__getRowNodeId && e.node.data.__ROW_INDEX ? e.node.data.__ROW_INDEX : e.node.id,
+    childIndex: e.node.childIndex,
     selected: Boolean(e.node.selected),
-    data: e.node.data,
-    // level: e.node.level, // the group level 
-
-    // hasParent: hasParent,
-    // parentId: hasParent ? e.node.parent.id : -1,
+    index: e.node.data.__ROW_INDEX ? e.node.data.__ROW_INDEX : "",
     parentKey: e.node.hasOwnProperty('parent') && e.node.parent.hasOwnProperty('key') ? e.node.parent.key : '',
   };
 
